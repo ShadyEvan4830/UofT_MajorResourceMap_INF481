@@ -37,7 +37,7 @@ The UTSG Major Resource Map allows students to:
 ## Live Demo
 
 The project is deployed via GitHub Pages. View the live demo here:  
-[)
+[https://shadyevan4830.github.io/UofT_MajorResourceMap_INF481/)
 
 ## Getting Started
 
