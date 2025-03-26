@@ -1,4 +1,4 @@
-# UofT_MajorResourceMap_INF481
+# UofT Major Resource Map (INF481 Simulation)
 
 This is an interactive web application that simulates a campus resource map for the University of Toronto's St. George campus. The project allows students to select their major and view a customized map that highlights labs, research centers, student clubs, and more, based on their Primary and Secondary Research. All of which are tailored to their field of study. Please note that this project was developed as part of the INF481 final project by Tianen (Evan) Hao, a simulation for academic purposes and it is not connected to actual University systems.
 
@@ -6,7 +6,7 @@ This is an interactive web application that simulates a campus resource map for 
 
 The UTSG Major Resource Map allows students to:
 - Select one of 15 majors and view a customized interactive map.
-- See simulated resources tailored to their major, including Academic Facilities, Research Centers, Student Clubs, Career & Networking, Social & Cultural, and Advising & Support.
+- See simulated resources tailored to their major, including Academic Facilities, Research Centres, Student Clubs, Career & Networking, Social & Cultural, and Advising & Support.
 - Reserve resources and view them in the "My Reservations" section.
 - Simulate a sign-in flow (displaying "Karen" with a dropdown for Settings and Log Out).
 
