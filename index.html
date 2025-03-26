@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>UTSG Major Resource Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#002A5C',
+            secondary: '#E31837',
+          },
+          borderRadius: {
+            button: '8px',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Remix Icon -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      scroll-behavior: smooth;
+    }
+    /* left logo height */
+    .uoft-logo {
+      height: 40px;
+    }
+    /* Modal */
+    .modal-backdrop {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    /* Animation */
+    @keyframes fade-in-down {
+      0% { opacity: 0; transform: translateY(-10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-down {
+      animation: fade-in-down 0.3s ease-out;
+    }
+    .rounded-button {
+      border-radius: 8px;
+    }
+    /* Little Menu */
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- ===================== Navi ===================== -->
+  <nav class="bg-white/80 backdrop-blur-md text-primary border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Left：UofT Logo & Navi -->
+        <div class="flex items-center space-x-8">
+          <!-- UofT logo -->
+          <img src="uoft_logo.png" alt="University of Toronto Logo" class="uoft-logo" />
+          <!-- left hidden md:flex -->
+          <div class="flex space-x-6">
+            <button class="text-sm font-medium hover:text-secondary transition-colors flex items-center" onclick="navigateToPage('home')">
+              <i class="ri-home-line mr-1"></i> Home
+            </button>
+            <button class="text-sm font-medium hover:text-secondary transition-colors" onclick="navigateToPage('about')">
+              About
+            </button>
+            <button class="text-sm font-medium hover:text-secondary transition-colors" onclick="navigateToPage('reservations')">
+              My Reservations
+            </button>
+          </div>
+        </div>
+
+        <!-- Sign In and show Karen + menu -->
+        <div class="flex items-center space-x-4">
+          <button
+            id="signInButton"
+            onclick="showSignInModal()"
+            class="px-3 py-2 text-sm font-medium hover:text-secondary transition-colors"
+          >
+            Sign In
+          </button>
+
+          <!-- After log in -->
+          <div id="userMenuContainer" class="relative hidden">
+            <button
+              onclick="toggleUserMenu()"
+              class="px-3 py-2 text-sm font-medium hover:text-secondary transition-colors flex items-center"
+            >
+              <span id="userNameLabel">Karen</span>
+              <i class="ri-arrow-down-s-line ml-1"></i>
+            </button>
+            <div
+              id="userDropdown"
+              class="hidden absolute right-0 mt-2 w-32 bg-white border border-gray-100 rounded-lg shadow-lg"
+            >
+              <button
+                onclick="showSettings()"
+                class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+              >
+                Settings
+              </button>
+              <button
+                onclick="logOut()"
+                class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 text-red-600"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================== HOME PAGE ===================== -->
+  <div id="homePage" class="relative min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-white to-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24">
+      <div class="text-center mb-16">
+        <h1 class="text-5xl font-bold text-primary mb-6">UTSG Major Resource Map</h1>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          Discover comprehensive resources and facilities tailored to your academic journey at the University of Toronto St. George Campus
+        </p>
+      </div>
+      <!-- Major card -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <!-- 1. Computer Science -->
+        <div class="group hover:scale-105 transition-transform duration-300">
+          <button onclick="goToMap('Computer Science')" class="w-full bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl rounded-xl p-6 text-left border border-gray-100 hover:border-primary/20 hover:bg-white">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
+                <i class="ri-code-line text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold ml-4 text-gray-900">Computer Science</h3>
+            </div>
+            <!-- Text -->
+            <p class="text-gray-600 text-sm">Labs & communities</p>
+          </button>
+        </div>
+        <!-- 2. Engineering -->
+        <div class="group hover:scale-105 transition-transform duration-300">
+          <button onclick="goToMap('Engineering')" class="w-full bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl rounded-xl p-6 text-left border border-gray-100 hover:border-primary/20 hover:bg-white">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
+                <i class="ri-tools-line text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold ml-4 text-gray-900">Engineering</h3>
+            </div>
+            <p class="text-gray-600 text-sm">Labs & design studios</p>
+          </button>
+        </div>
+        <!-- 3. Rotman Commerce -->
+        <div class="group hover:scale-105 transition-transform duration-300">
+          <button onclick="goToMap('Rotman Commerce')" class="w-full bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl rounded-xl p-6 text-left border border-gray-100 hover:border-primary/20 hover:bg-white">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
+                <i class="ri-bank-line text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold ml-4 text-gray-900">Rotman Commerce</h3>
+            </div>
+            <p class="text-gray-600 text-sm">Business & networking</p>
+          </button>
+        </div>
+        <!-- 4. Arts & Humanities -->
+        <div class="group hover:scale-105 transition-transform duration-300">
+          <button onclick="goToMap('Arts & Humanities')" class="w-full bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl rounded-xl p-6 text-left border border-gray-100 hover:border-primary/20 hover:bg-white">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
+                <i class="ri-book-open-line text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold ml-4 text-gray-900">Arts & Humanities</h3>
+            </div>
+            <p class="text-gray-600 text-sm">Libraries & cultural spaces</p>
+          </button>
+        </div>
+        <!-- 5. Social Sciences -->
+        <div class="group hover:scale-105 transition-transform duration-300">
+          <button onclick="goToMap('Social Sciences')" class="w-full bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl rounded-xl p-6 text-left border border-gray-100 hover:border-primary/20 hover:bg-white">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
+                <i class="ri-group-line text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold ml-4 text-gray-900">Social Sciences</h3>
+            </div>
+            <p class="text-gray-600 text-sm">Policy & community</p>
+          </button>
+        </div>
+        <!-- 6. Biological Sciences -->
+        <div class="group hover:scale-105 transition-transform duration-300">
+          <button onclick="goToMap('Biological Sciences')" class="w-full bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl rounded-xl p-6 text-left border border-gray-100 hover:border-primary/20 hover:bg-white">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
+                <i class="ri-microscope-line text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold ml-4 text-gray-900">Biological Sciences</h3>
+            </div>
+            <p class="text-gray-600 text-sm">Labs & research</p>
+          </button>
+        </div>
+        <!-- 7. Physical Sciences -->
+        <div class="group hover:scale-105 transition-transform duration-300">
+          <button onclick="goToMap('Physical Sciences')" class="w-full bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl rounded-xl p-6 text-left border border-gray-100 hover:border-primary/20 hover:bg-white">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
+                <i class="ri-flask-line text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold ml-4 text-gray-900">Physical Sciences</h3>
+            </div>
+            <p class="text-gray-600 text-sm">Labs & equipment</p>
+          </button>
+        </div>
+        <!-- 8. Health Sciences -->
+        <div class="group hover:scale-105 transition-transform duration-300">
+          <button onclick="goToMap('Health Sciences')" class="w-full bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl rounded-xl p-6 text-left border border-gray-100 hover:border-primary/20 hover:bg-white">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
+                <i class="ri-heart-pulse-line text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold ml-4 text-gray-900">Health Sciences</h3>
+            </div>
+            <p class="text-gray-600 text-sm">Clinics & support</p>
+          </button>
+        </div>
+        <!-- 9. Law -->
+        <div class="group hover:scale-105 transition-transform duration-300">
+          <button onclick="goToMap('Law')" class="w-full bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl rounded-xl p-6 text-left border border-gray-100 hover:border-primary/20 hover:bg-white">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
+                <i class="ri-scales-3-line text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold ml-4 text-gray-900">Law</h3>
+            </div>
+            <p class="text-gray-600 text-sm">Legal & moot courts</p>
+          </button>
+        </div>
+        <!-- 10. Education -->
+        <div class="group hover:scale-105 transition-transform duration-300">
+          <button onclick="goToMap('Education')" class="w-full bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl rounded-xl p-6 text-left border border-gray-100 hover:border-primary/20 hover:bg-white">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
+                <i class="ri-graduation-cap-line text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold ml-4 text-gray-900">Education</h3>
+            </div>
+            <p class="text-gray-600 text-sm">Teaching & learning</p>
+          </button>
+        </div>
+        <!-- 11. Architecture Design -->
+        <div class="group hover:scale-105 transition-transform duration-300">
+          <button onclick="goToMap('Architecture Design')" class="w-full bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl rounded-xl p-6 text-left border border-gray-100 hover:border-primary/20 hover:bg-white">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
+                <i class="ri-building-2-line text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold ml-4 text-gray-900">Architecture Design</h3>
+            </div>
+            <p class="text-gray-600 text-sm">Design & workshops</p>
+          </button>
+        </div>
+        <!-- 12. Music -->
+        <div class="group hover:scale-105 transition-transform duration-300">
+          <button onclick="goToMap('Music')" class="w-full bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl rounded-xl p-6 text-left border border-gray-100 hover:border-primary/20 hover:bg-white">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
+                <i class="ri-music-line text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold ml-4 text-gray-900">Music</h3>
+            </div>
+            <p class="text-gray-600 text-sm">Practice & performance</p>
+          </button>
+        </div>
+        <!-- 13. Information -->
+        <div class="group hover:scale-105 transition-transform duration-300">
+          <button onclick="goToMap('Information')" class="w-full bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl rounded-xl p-6 text-left border border-gray-100 hover:border-primary/20 hover:bg-white">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
+                <i class="ri-database-2-line text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold ml-4 text-gray-900">Information</h3>
+            </div>
+            <p class="text-gray-600 text-sm">Resources & tech labs</p>
+          </button>
+        </div>
+        <!-- 14. Kinesiology & Physical -->
+        <div class="group hover:scale-105 transition-transform duration-300">
+          <button onclick="goToMap('Kinesiology & Physical')" class="w-full bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl rounded-xl p-6 text-left border border-gray-100 hover:border-primary/20 hover:bg-white">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
+                <i class="ri-run-line text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold ml-4 text-gray-900">Kinesiology & Physical</h3>
+            </div>
+            <p class="text-gray-600 text-sm">Sports & research</p>
+          </button>
+        </div>
+        <!-- 15. International Studies -->
+        <div class="group hover:scale-105 transition-transform duration-300">
+          <button onclick="goToMap('International Studies')" class="w-full bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl rounded-xl p-6 text-left border border-gray-100 hover:border-primary/20 hover:bg-white">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
+                <i class="ri-global-line text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold ml-4 text-gray-900">International Studies</h3>
+            </div>
+            <p class="text-gray-600 text-sm">Global & study spaces</p>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MAP PAGE ===================== -->
+  <div id="mapView" class="hidden">
+    <div class="flex h-[calc(100vh-4rem)]">
+      <!-- Map -->
+      <div class="w-[70%] relative">
+        <div id="map" class="h-full"></div>
+        <button onclick="returnToHome()" class="absolute top-4 right-4 bg-white px-4 py-2 rounded-button shadow-lg hover:bg-gray-50 flex items-center space-x-2 z-[1000]">
+          <i class="ri-home-line"></i><span>Return to Home</span>
+        </button>
+      </div>
+      <!-- Right list -->
+      <div class="w-[30%] bg-white shadow-lg overflow-y-auto p-6">
+        <div class="relative mb-6">
+          <input type="text" placeholder="Search resources..." class="w-full pl-10 pr-4 py-3 border-none bg-gray-50 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:outline-none" />
+          <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        </div>
+        <div id="categoryList" class="space-y-8">
+          <!-- JS Resources -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MY RESERVATIONS PAGE ===================== -->
+  <div id="reservationsPage" class="hidden min-h-screen bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex space-x-8">
+        <!-- 左侧：My Schedule -->
+        <div class="w-2/3">
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-2xl font-bold text-gray-900">My Schedule</h2>
+              <div class="flex space-x-4">
+                <button onclick="showCalendarView()" class="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-button hover:bg-gray-200">
+                  <i class="ri-calendar-line mr-2"></i>Calendar View
+                </button>
+                <button onclick="makeNewReservation()" class="px-4 py-2 text-sm bg-primary text-white rounded-button hover:bg-primary/90">
+                  <i class="ri-add-line mr-2"></i>New Reservation
+                </button>
+              </div>
+            </div>
+            <div class="flex space-x-4 border-b border-gray-100 mb-4">
+              <button class="px-4 py-2 text-sm font-medium text-primary border-b-2 border-primary">Upcoming</button>
+              <button class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">Past</button>
+              <button class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">All</button>
+            </div>
+            <div id="reservationList" class="space-y-4">
+              <!-- Reservations -->
+            </div>
+          </div>
+        </div>
+        <!-- Quick Stats -->
+        <div class="w-1/3 space-y-6">
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-4">Recommended for Bachelor of Information</h3>
+            <div id="recommendedResources" class="space-y-4">
+              <!-- Recommend Resources -->
+            </div>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-4">Quick Stats</h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="p-4 bg-gray-50 rounded-xl text-center">
+                <p id="statUpcoming" class="text-2xl font-bold text-primary mb-2">0</p>
+                <p class="text-sm text-gray-600">Upcoming</p>
+              </div>
+              <div class="p-4 bg-gray-50 rounded-xl text-center">
+                <p class="text-2xl font-bold text-primary mb-2">0</p>
+                <p class="text-sm text-gray-600">Past</p>
+              </div>
+              <div class="p-4 bg-gray-50 rounded-xl text-center">
+                <p class="text-2xl font-bold text-primary mb-2">0</p>
+                <p class="text-sm text-gray-600">Favorites</p>
+              </div>
+              <div class="p-4 bg-gray-50 rounded-xl text-center">
+                <p class="text-2xl font-bold text-primary mb-2">0%</p>
+                <p class="text-sm text-gray-600">Usage</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== ABOUT PAGE ===================== -->
+  <div id="aboutPage" class="hidden min-h-screen bg-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h1 class="text-4xl font-bold text-primary mb-4">About University of Toronto</h1>
+        <p class="text-xl text-gray-600">Discover our rich history and commitment to excellence</p>
+      </div>
+      <div class="prose prose-lg max-w-4xl mx-auto">
+        <div class="mb-12">
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">Our History</h2>
+          <p class="text-gray-600">
+            Founded in 1827, the University of Toronto is Canada's leading institution of learning, discovery and knowledge creation. We are proud to be one of the world's top research-intensive universities, driven to invent and innovate.
+          </p>
+        </div>
+        <div class="mb-12">
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">Our Mission</h2>
+          <p class="text-gray-600">
+            The University of Toronto is dedicated to fostering an academic community in which the learning and scholarship of every member may flourish, with vigilant protection for individual human rights, and a resolute commitment to the principles of equal opportunity, equity and justice.
+          </p>
+        </div>
+        <div class="mb-12">
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">Key Facts</h2>
+          <ul class="list-disc pl-4 text-gray-600 space-y-2">
+            <li><strong>93,000+</strong> Students across three campuses</li>
+            <li><strong>980+</strong> Programs of study</li>
+            <li><strong>Top 20</strong> Global university ranking</li>
+            <li><strong>600,000+</strong> Alumni worldwide</li>
+          </ul>
+        </div>
+        <div class="mb-12">
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">About This Project</h2>
+          <p class="text-gray-600 mb-4">
+            This resource map was created by <span class="font-semibold">Tianen Hao</span> as part of the INF481 Final Project. The goal of this project is to help students easily locate and access various resources available across the University of Toronto St. George campus.
+          </p>
+          <p class="text-gray-600">
+            The interactive map provides real-time information about study spaces, research facilities, and other academic resources, making it easier for students to find and reserve the spaces they need.
+          </p>
+        </div>
+        <div class="text-center mt-12">
+          <button onclick="returnToHome()" class="px-6 py-3 bg-primary text-white rounded-button hover:bg-primary/90 inline-flex items-center">
+            <i class="ri-arrow-left-line mr-2"></i>Return to Home
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SIGN IN MODAL ===================== -->
+  <div id="signInModal" class="hidden fixed inset-0 flex items-center justify-center z-[9999] modal-backdrop">
+    <div class="bg-white rounded-xl max-w-sm w-full mx-4 p-6 animate-fade-in-down relative">
+      <button class="absolute top-3 right-3 text-gray-400 hover:text-gray-500" onclick="closeSignInModal()">
+        <i class="ri-close-line ri-2x"></i>
+      </button>
+      <div class="text-center mb-6">
+        <img src="uoft_logo.png" alt="UofT Logo" class="w-15 h-auto mx-auto mb-4" />
+        <h3 class="text-xl font-bold text-gray-900">Sign in with UTORid</h3>
+        <p class="text-sm text-gray-600 mt-2">Access UofT resources and services</p>
+      </div>
+      <form onsubmit="handleSignIn(event)" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">UTORid</label>
+          <input type="text" required placeholder="Enter your UTORid" class="w-full px-4 py-2 border border-gray-200 rounded-button text-sm" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+          <input type="password" required placeholder="Enter your password" class="w-full px-4 py-2 border border-gray-200 rounded-button text-sm" />
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <input type="checkbox" id="rememberMe" class="h-4 w-4 text-primary rounded" />
+            <label for="rememberMe" class="ml-2 text-sm text-gray-600">Remember me</label>
+          </div>
+          <a href="#" class="text-sm text-primary hover:text-primary/90">Forgot password?</a>
+        </div>
+        <button type="submit" class="w-full px-4 py-2 bg-primary text-white rounded-button hover:bg-primary/90 flex items-center justify-center">
+          <i class="ri-login-box-line mr-2"></i>Sign in with UTORid
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================== Pop-up window ===================== -->
+  <div id="resourceModal" class="hidden fixed inset-0 flex items-center justify-center z-[2000] modal-backdrop">
+    <div class="bg-white rounded-xl max-w-md w-full mx-4 p-6 animate-fade-in-down relative">
+      <button class="absolute top-3 right-3 text-gray-400 hover:text-gray-500" onclick="closeResourceModal()">
+        <i class="ri-close-line ri-2x"></i>
+      </button>
+      <div id="modalContent" class="space-y-6">
+        <!-- Contact info -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== JS Scripts ===================== -->
+  <script>
+    // Full page use
+    const homePage = document.getElementById('homePage');
+    const mapView = document.getElementById('mapView');
+    const aboutPage = document.getElementById('aboutPage');
+    const reservationsPage = document.getElementById('reservationsPage');
+    const signInModal = document.getElementById('signInModal');
+    const resourceModal = document.getElementById('resourceModal');
+    const modalContent = document.getElementById('modalContent');
+
+    // Right button
+    const signInButton = document.getElementById('signInButton');
+    const userMenuContainer = document.getElementById('userMenuContainer');
+    const userDropdown = document.getElementById('userDropdown');
+    const userNameLabel = document.getElementById('userNameLabel');
+
+    let map = null;
+    let currentMajor = '';
+    let myReservations = [];
+    let isLoggedIn = false; // Log in
+
+    // ---------- Switch page ----------
+    function navigateToPage(page) {
+      homePage.classList.add('hidden');
+      mapView.classList.add('hidden');
+      aboutPage.classList.add('hidden');
+      reservationsPage.classList.add('hidden');
+
+      if (page === 'home') {
+        homePage.classList.remove('hidden');
+        window.scrollTo(0, 0);
+      } else if (page === 'about') {
+        aboutPage.classList.remove('hidden');
+        window.scrollTo(0, 0);
+      } else if (page === 'reservations') {
+        reservationsPage.classList.remove('hidden');
+        updateReservationList();
+        window.scrollTo(0, 0);
+      } else if (page === 'map') {
+        mapView.classList.remove('hidden');
+        window.scrollTo(0, 0);
+      }
+    }
+    function returnToHome() {
+      navigateToPage('home');
+      if (map) {
+        map.remove();
+        map = null;
+      }
+    }
+
+    // ---------- Log in/out ----------
+    function showSignInModal() {
+      signInModal.classList.remove('hidden');
+    }
+    function closeSignInModal() {
+      signInModal.classList.add('hidden');
+    }
+    function handleSignIn(event) {
+      event.preventDefault();
+      isLoggedIn = true;
+      alert('Signed in with UTORid successfully!');
+      closeSignInModal();
+      updateNav();
+    }
+    function updateNav() {
+      if (isLoggedIn) {
+        signInButton.classList.add('hidden');
+        userMenuContainer.classList.remove('hidden');
+      } else {
+        signInButton.classList.remove('hidden');
+        userMenuContainer.classList.add('hidden');
+      }
+    }
+    function toggleUserMenu() {
+      userDropdown.classList.toggle('hidden');
+    }
+    function showSettings() {
+      alert('Settings page (demo).');
+      userDropdown.classList.add('hidden');
+    }
+    function logOut() {
+      isLoggedIn = false;
+      alert('Logged out successfully!');
+      updateNav();
+    }
+
+    // ---------- Different resources ----------
+    function generateResourcesForMajor(major) {
+      const categories = ["Academic Facilities", "Research Centers", "Student Clubs", "Career & Networking", "Social & Cultural", "Advising & Support"];
+      let resources = [];
+      for (let i = 0; i < 10; i++) {
+        const cat = categories[i % categories.length];
+        resources.push({
+          name: `${major} Resource #${i + 1}`,
+          category: cat,
+          lat: 43.6629 + (Math.random() - 0.5) / 200,
+          lng: -79.3957 + (Math.random() - 0.5) / 200,
+          description: `A simulated resource in ${cat} for ${major}.`,
+          hours: 'Mon-Fri: 8AM-10PM',
+          contact: `${major.toLowerCase().replace(/\s/g, '')}@utoronto.ca | (416) 555-00${i}`,
+          occupancy: Math.floor(30 + Math.random() * 70),
+          lastUpdated: `${Math.floor(Math.random() * 10) + 1} mins ago`,
+          facilities: {
+            computers: `${Math.floor(20 + Math.random() * 10)}/${Math.floor(30 + Math.random() * 10)}`,
+            printers: `${Math.floor(1 + Math.random() * 2)}/${Math.floor(2 + Math.random() * 2)}`,
+            groupRooms: `${Math.floor(4 + Math.random() * 4)}/${Math.floor(8 + Math.random() * 4)}`,
+            quietZones: Math.floor(1 + Math.random() * 2),
+          },
+          studySpaces: {
+            individualDesks: Math.floor(50 + Math.random() * 50),
+            groupRooms: Math.floor(4 + Math.random() * 4),
+            readingLounges: Math.floor(2 + Math.random() * 3),
+          },
+        });
+      }
+      const grouped = {};
+      resources.forEach(res => {
+        if (!grouped[res.category]) grouped[res.category] = [];
+        grouped[res.category].push(res);
+      });
+      return grouped;
+    }
+
+    // ---------- Click card and get into map page ----------
+    function goToMap(major) {
+      currentMajor = major;
+      navigateToPage('map');
+      setTimeout(() => {
+        initMap();
+        loadMajorResources(major);
+      }, 100);
+    }
+
+    // ---------- Campus Boundary changed to -79.390） ----------
+    function initMap() {
+      if (map) {
+        map.remove();
+        map = null;
+      }
+      map = L.map('map').setView([43.6629, -79.3957], 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+
+      // Boundary：-79.390
+      L.polygon(
+        [
+          [43.671, -79.403],
+          [43.671, -79.390],
+          [43.656, -79.390],
+          [43.656, -79.403],
+        ],
+        { color: '#002A5C', fillColor: '#002A5C', fillOpacity: 0.1 }
+      ).addTo(map);
+
+      // Legend：Resource Location
+      const legend = L.control({ position: 'bottomleft' });
+      legend.onAdd = function () {
+        const div = L.DomUtil.create('div', 'p-4 bg-white rounded shadow');
+        div.innerHTML = `
+          <h4 class="font-bold mb-2">Legend</h4>
+          <div class="flex items-center mb-2">
+            <div class="w-4 h-4 bg-blue-500 rounded-full mr-2"></div>
+            <span>Resource Location</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-4 h-4 border-2 border-blue-700 bg-blue-200 mr-2"></div>
+            <span>Campus Boundary</span>
+          </div>
+        `;
+        return div;
+      };
+      legend.addTo(map);
+    }
+
+    // ---------- Load resources ----------
+    function loadMajorResources(major) {
+      const groupedResources = generateResourcesForMajor(major);
+      const categoryList = document.getElementById('categoryList');
+      categoryList.innerHTML = '';
+      for (const [category, resources] of Object.entries(groupedResources)) {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'resource-category';
+        const title = document.createElement('h3');
+        title.className = 'text-lg font-semibold text-gray-900 mb-4';
+        title.textContent = category;
+        categoryDiv.appendChild(title);
+        const listDiv = document.createElement('div');
+        listDiv.className = 'space-y-3';
+        resources.forEach(res => {
+          const marker = L.marker([res.lat, res.lng], { title: res.name }).addTo(map);
+          marker.on('click', () => { openResourceModal(res); });
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'resource-item p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors';
+          itemDiv.innerHTML = `
+            <div class="flex items-start">
+              <div class="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-lg">
+                <i class="ri-file-list-2-line text-primary"></i>
+              </div>
+              <div class="ml-4">
+                <h4 class="font-medium text-gray-900">${res.name}</h4>
+                <p class="text-sm text-gray-600 mt-1">${res.description}</p>
+              </div>
+            </div>
+          `;
+          itemDiv.addEventListener('click', () => {
+            openResourceModal(res);
+            map.setView([res.lat, res.lng], 17);
+          });
+          listDiv.appendChild(itemDiv);
+        });
+        categoryDiv.appendChild(listDiv);
+        categoryList.appendChild(categoryDiv);
+      }
+    }
+
+    // ---------- Info pop-up ----------
+    function openResourceModal(resource) {
+      modalContent.innerHTML = `
+        <h2 class="text-xl font-bold text-gray-900">${resource.name}</h2>
+        <p class="text-sm text-gray-600">${resource.description}</p>
+        <div class="mt-2 text-sm text-gray-600">
+          <b>Hours:</b> ${resource.hours}<br/>
+          <b>Contact:</b> ${resource.contact}
+        </div>
+        <div class="mt-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium">Current Occupancy: ${resource.occupancy}%</span>
+            <span class="text-xs text-gray-500">Updated ${resource.lastUpdated}</span>
+          </div>
+          <div class="w-full h-2 bg-gray-200 rounded-full">
+            <div class="h-2 bg-primary rounded-full" style="width: ${resource.occupancy}%"></div>
+          </div>
+        </div>
+        <div class="mt-4 grid grid-cols-2 gap-2 text-sm">
+          <div>
+            <p class="font-medium">Available Facilities:</p>
+            <ul class="mt-1 space-y-1">
+              <li>Computers: ${resource.facilities.computers}</li>
+              <li>Printers: ${resource.facilities.printers}</li>
+              <li>Group Rooms: ${resource.facilities.groupRooms}</li>
+              <li>Quiet Zones: ${resource.facilities.quietZones}</li>
+            </ul>
+          </div>
+          <div>
+            <p class="font-medium">Study Spaces:</p>
+            <ul class="mt-1 space-y-1">
+              <li>Individual Desks: ${resource.studySpaces.individualDesks}</li>
+              <li>Group Rooms: ${resource.studySpaces.groupRooms}</li>
+              <li>Reading Lounges: ${resource.studySpaces.readingLounges}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-6 flex space-x-4">
+          <button onclick="reserveResource(${JSON.stringify(resource).replace(/"/g, '&quot;')})" class="flex-1 px-4 py-2 bg-primary text-white rounded-button hover:bg-primary/90">
+            Reservation
+          </button>
+          <button onclick="closeResourceModal()" class="flex-1 px-4 py-2 border border-gray-200 rounded-button hover:bg-gray-50">
+            Cancel
+          </button>
+        </div>
+      `;
+      resourceModal.classList.remove('hidden');
+    }
+    function closeResourceModal() {
+      resourceModal.classList.add('hidden');
+    }
+
+    // ---------- Numbers ----------
+    function reserveResource(resource) {
+      // Put contact save into myReservations
+      myReservations.push({
+        name: resource.name,
+        description: resource.description,
+        date: new Date().toLocaleDateString(),
+        time: '09:00-11:00',
+        major: currentMajor,
+        contact: resource.contact,
+      });
+      alert(`You have reserved: ${resource.name}`);
+      closeResourceModal();
+    }
+
+    // ---------- My Reservations page ----------
+    function updateReservationList() {
+      const list = document.getElementById('reservationList');
+      list.innerHTML = '';
+      if (myReservations.length === 0) {
+        list.innerHTML = `
+          <div class="text-center py-12">
+            <i class="ri-calendar-line text-5xl text-gray-400"></i>
+            <p class="mt-4 text-lg text-gray-600">No upcoming appointments</p>
+            <p class="mt-2 text-sm text-gray-500">Browse resources and make a new reservation!</p>
+          </div>
+        `;
+      } else {
+        myReservations.forEach((res, index) => {
+          const div = document.createElement('div');
+          div.className = 'flex items-start p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors';
+          div.innerHTML = `
+            <div class="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center">
+              <i class="ri-calendar-2-line text-2xl text-primary"></i>
+            </div>
+            <div class="ml-4 flex-1">
+              <div class="flex justify-between">
+                <div>
+                  <h3 class="font-medium text-gray-900">${res.name}</h3>
+                  <p class="text-sm text-gray-600 mt-1">${res.description}</p>
+                </div>
+                <!-- 用更好看的绿Pill -->
+                <span class="inline-block px-3 py-3 text-sm font-semibold text-green-700 bg-green-100 border border-green-250 rounded-full">
+                  Reserved
+                </span>
+              </div>
+              <div class="mt-3 flex items-center space-x-4 text-sm text-gray-600">
+                <span><i class="ri-calendar-line mr-1"></i>${res.date}</span>
+                <span><i class="ri-time-line mr-1"></i>${res.time}</span>
+                <span><i class="ri-bookmark-line mr-1"></i>${res.major}</span>
+              </div>
+              <div class="mt-4 flex space-x-4">
+                <!-- Modify 改为 Contact -->
+                <button onclick="contactReservation(${index})" class="text-sm text-primary hover:text-primary/90">
+                  Contact
+                </button>
+                <button onclick="cancelReservation(${index})" class="text-sm text-red-600 hover:text-red-700">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          `;
+          list.appendChild(div);
+        });
+      }
+      document.getElementById('statUpcoming').textContent = myReservations.length;
+    }
+
+    // Contact -> Pop-up
+    function contactReservation(index) {
+      const res = myReservations[index];
+      modalContent.innerHTML = `
+        <h2 class="text-xl font-bold text-gray-900">Contact Information</h2>
+        <p class="mt-2 text-sm text-gray-600">You can reach out via:</p>
+        <p class="text-sm text-gray-800 font-medium mt-2">${res.contact || "No contact info"}</p>
+        <div class="mt-6 flex justify-end">
+          <button onclick="closeResourceModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-button hover:bg-gray-300">Cancel</button>
+        </div>
+      `;
+      resourceModal.classList.remove('hidden');
+    }
+
+    function cancelReservation(index) {
+      if (confirm('Are you sure to cancel this reservation?')) {
+        myReservations.splice(index, 1);
+        updateReservationList();
+      }
+    }
+    function showCalendarView() {
+      alert('Calendar view (demo).');
+    }
+    function makeNewReservation() {
+      alert('New reservation form (demo).');
+    }
+
+    // ---------- Recommended-info + Some of AI generated images (not for commercialization) ----------
+    const recommendedForInfo = [
+      {
+        name: 'Information Systems Lab',
+        desc: 'Advanced computing facility with specialized software',
+        availability: 'Available Now',
+        image: 'https://public.readdy.ai/ai/img_res/ab38ec5f36e65f0582f3d59d4d5e3e7d.jpg',
+      },
+      {
+        name: 'Data Science Workshop',
+        desc: 'Collaborative space for data analysis projects',
+        availability: '2 Spots Left',
+        image: 'https://public.readdy.ai/ai/img_res/81bcda603f2b8e19cfcac1026461c336.jpg',
+      },
+      {
+        name: 'UX Research Lab',
+        desc: 'User testing and design research facility',
+        availability: 'Available Tomorrow',
+        image: 'https://public.readdy.ai/ai/img_res/8ebaba63bcff5ccfad57040f6c24a5f1.jpg',
+      },
+    ];
+    function loadRecommendedResources() {
+      const container = document.getElementById('recommendedResources');
+      container.innerHTML = '';
+      recommendedForInfo.forEach((res) => {
+        const div = document.createElement('div');
+        div.className = 'flex items-start p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer';
+        div.innerHTML = `
+          <img src="${res.image}" alt="${res.name}" class="w-16 h-16 rounded-lg object-cover">
+          <div class="ml-4">
+            <h4 class="font-medium text-gray-900">${res.name}</h4>
+            <p class="text-sm text-gray-600 mt-1">${res.desc}</p>
+            <span class="inline-block mt-2 px-2 py-1 text-xs font-medium text-primary bg-primary/10 rounded-full">
+              ${res.availability}
+            </span>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+    reservationsPage.addEventListener('click', loadRecommendedResources);
+    document.querySelector('[onclick="navigateToPage(\'reservations\')"]').addEventListener('click', loadRecommendedResources);
+  </script>
+</body>
+</html>
