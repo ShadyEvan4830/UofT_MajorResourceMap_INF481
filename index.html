@@ -87,6 +87,10 @@
             <button class="text-sm font-medium hover:text-secondary transition-colors" onclick="navigateToPage('reservations')">
               My Reservations
             </button>
+            <!-- New Campus Life nav button -->
+            <button class="text-sm font-medium hover:text-secondary transition-colors" onclick="goToCampusLife()">
+              Campus Life
+            </button>
           </div>
         </div>
 
@@ -141,8 +145,9 @@
           Discover comprehensive resources and facilities tailored to your academic journey at the University of Toronto St. George Campus
         </p>
       </div>
-      <!-- Major card -->
+      <!-- Major card grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <!-- (Existing major cards remain unchanged) -->
         <!-- 1. Computer Science -->
         <div class="group hover:scale-105 transition-transform duration-300">
           <button onclick="goToMap('Computer Science')" class="w-full bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl rounded-xl p-6 text-left border border-gray-100 hover:border-primary/20 hover:bg-white">
@@ -152,7 +157,6 @@
               </div>
               <h3 class="text-xl font-semibold ml-4 text-gray-900">Computer Science</h3>
             </div>
-            <!-- Text -->
             <p class="text-gray-600 text-sm">Labs & communities</p>
           </button>
         </div>
@@ -324,6 +328,18 @@
             <p class="text-gray-600 text-sm">Global & study spaces</p>
           </button>
         </div>
+        <!-- New: Campus Life Card -->
+        <div class="group hover:scale-105 transition-transform duration-300">
+          <button onclick="goToCampusLife()" class="w-full bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl rounded-xl p-6 text-left border border-gray-100 hover:border-primary/20 hover:bg-white">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
+                <i class="ri-rocket-line text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold ml-4 text-gray-900">Campus Life</h3>
+            </div>
+            <p class="text-gray-600 text-sm">Explore clubs, events & campus resources.</p>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -355,7 +371,7 @@
   <div id="reservationsPage" class="hidden min-h-screen bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="flex space-x-8">
-        <!-- 左侧：My Schedule -->
+        <!-- Left: My Schedule -->
         <div class="w-2/3">
           <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
             <div class="flex justify-between items-center mb-6">
@@ -376,6 +392,14 @@
             </div>
             <div id="reservationList" class="space-y-4">
               <!-- Reservations -->
+            </div>
+          </div>
+
+          <!-- NEW: My Campus Life Applications (Separate Section) -->
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">My Campus Life Applications</h2>
+            <div id="campusLifeSubmissionList" class="space-y-4">
+              <!-- Will show user-submitted events with Contact, Cancel buttons, and a Reserved pill -->
             </div>
           </div>
         </div>
@@ -460,6 +484,61 @@
     </div>
   </div>
 
+  <!-- ===================== CAMPUS LIFE PAGE ===================== -->
+  <div id="campusLifePage" class="hidden min-h-screen bg-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h1 class="text-4xl font-bold text-primary mb-4">Campus Life at U of T</h1>
+        <p class="text-xl text-gray-600">Discover clubs, events, and services that shape the vibrant campus experience.</p>
+      </div>
+      <!-- Search and Recommendation Section -->
+      <div class="mb-12">
+        <input id="campusLifeSearch" type="text" placeholder="Search campus life..." class="w-full p-3 border border-gray-200 rounded-xl" />
+      </div>
+      <div id="campusLifeList" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Campus Life items will be dynamically loaded here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== CAMPUS LIFE MODAL ===================== -->
+  <div id="campusLifeModal" class="hidden fixed inset-0 flex items-center justify-center z-[4000] modal-backdrop">
+    <div class="bg-white rounded-xl max-w-md w-full mx-4 p-6 animate-fade-in-down relative">
+      <!-- The "Close" button below remains in code but will be forcibly removed. -->
+      <button class="absolute top-3 right-3 text-gray-400 hover:text-gray-500" onclick="closeCampusLifeModal()">
+        <i class="ri-close-line ri-2x"></i>
+      </button>
+      <div id="campusLifeModalContent" class="space-y-6">
+        <!-- Campus Life basic details will be injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== CAMPUS LIFE EVENTS MODAL ===================== -->
+  <div id="campusLifeEventsModal" class="hidden fixed inset-0 flex items-center justify-center z-[4500] modal-backdrop">
+    <div class="bg-white rounded-xl max-w-5xl w-full mx-4 p-6 animate-fade-in-down relative">
+      <button class="absolute top-3 right-3 text-gray-400 hover:text-gray-500" onclick="closeCampusLifeEventsModal()">
+        <i class="ri-close-line ri-2x"></i>
+      </button>
+      <!-- We'll use a grid of 3 columns for the events. -->
+      <div id="campusLifeEventsModalContent" class="grid grid-cols-3 gap-4">
+        <!-- List of events (3 columns) will be injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== CAMPUS LIFE EVENT DETAIL MODAL ===================== -->
+  <div id="campusLifeEventDetailModal" class="hidden fixed inset-0 flex items-center justify-center z-[5000] modal-backdrop">
+    <div class="bg-white rounded-xl max-w-md w-full mx-4 p-6 animate-fade-in-down relative">
+      <button class="absolute top-3 right-3 text-gray-400 hover:text-gray-500" onclick="closeCampusLifeEventDetailModal()">
+        <i class="ri-close-line ri-2x"></i>
+      </button>
+      <div id="campusLifeEventDetailModalContent" class="space-y-6">
+        <!-- Event details will be injected here -->
+      </div>
+    </div>
+  </div>
+
   <!-- ===================== SIGN IN MODAL ===================== -->
   <div id="signInModal" class="hidden fixed inset-0 flex items-center justify-center z-[9999] modal-backdrop">
     <div class="bg-white rounded-xl max-w-sm w-full mx-4 p-6 animate-fade-in-down relative">
@@ -494,14 +573,26 @@
     </div>
   </div>
 
-  <!-- ===================== Pop-up window ===================== -->
+  <!-- ===================== Pop-up window (Resource Modal) ===================== -->
   <div id="resourceModal" class="hidden fixed inset-0 flex items-center justify-center z-[2000] modal-backdrop">
     <div class="bg-white rounded-xl max-w-md w-full mx-4 p-6 animate-fade-in-down relative">
       <button class="absolute top-3 right-3 text-gray-400 hover:text-gray-500" onclick="closeResourceModal()">
         <i class="ri-close-line ri-2x"></i>
       </button>
       <div id="modalContent" class="space-y-6">
-        <!-- Contact info -->
+        <!-- Contact info and resource details -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== Provider Details MODAL ===================== -->
+  <div id="providerModal" class="hidden fixed inset-0 flex items-center justify-center z-[3000] modal-backdrop">
+    <div class="bg-white rounded-xl max-w-md w-full mx-4 p-6 animate-fade-in-down relative">
+      <button class="absolute top-3 right-3 text-gray-400 hover:text-gray-500" onclick="closeProviderModal()">
+        <i class="ri-close-line ri-2x"></i>
+      </button>
+      <div id="providerModalContent" class="space-y-6">
+        <!-- Provider details content will be injected here -->
       </div>
     </div>
   </div>
@@ -513,9 +604,19 @@
     const mapView = document.getElementById('mapView');
     const aboutPage = document.getElementById('aboutPage');
     const reservationsPage = document.getElementById('reservationsPage');
+    const campusLifePage = document.getElementById('campusLifePage');
     const signInModal = document.getElementById('signInModal');
     const resourceModal = document.getElementById('resourceModal');
     const modalContent = document.getElementById('modalContent');
+    const providerModal = document.getElementById('providerModal');
+
+    // Campus Life Modals
+    const campusLifeModal = document.getElementById('campusLifeModal');
+    const campusLifeModalContent = document.getElementById('campusLifeModalContent');
+    const campusLifeEventsModal = document.getElementById('campusLifeEventsModal');
+    const campusLifeEventsModalContent = document.getElementById('campusLifeEventsModalContent');
+    const campusLifeEventDetailModal = document.getElementById('campusLifeEventDetailModal');
+    const campusLifeEventDetailModalContent = document.getElementById('campusLifeEventDetailModalContent');
 
     // Right button
     const signInButton = document.getElementById('signInButton');
@@ -528,13 +629,16 @@
     let myReservations = [];
     let isLoggedIn = false; // Log in
 
+    // =========== New: Additional array to store Campus Life Applications =============
+    let myCampusLifeApplications = [];
+
     // ---------- Switch page ----------
     function navigateToPage(page) {
       homePage.classList.add('hidden');
       mapView.classList.add('hidden');
       aboutPage.classList.add('hidden');
       reservationsPage.classList.add('hidden');
-
+      campusLifePage.classList.add('hidden');
       if (page === 'home') {
         homePage.classList.remove('hidden');
         window.scrollTo(0, 0);
@@ -544,6 +648,7 @@
       } else if (page === 'reservations') {
         reservationsPage.classList.remove('hidden');
         updateReservationList();
+        updateCampusLifeSubmissionList(); // Also refresh the campus life apps
         window.scrollTo(0, 0);
       } else if (page === 'map') {
         mapView.classList.remove('hidden');
@@ -556,6 +661,17 @@
         map.remove();
         map = null;
       }
+    }
+
+    // ---------- New: Campus Life Navigation Function ----------
+    function goToCampusLife() {
+      homePage.classList.add('hidden');
+      mapView.classList.add('hidden');
+      aboutPage.classList.add('hidden');
+      reservationsPage.classList.add('hidden');
+      campusLifePage.classList.remove('hidden');
+      window.scrollTo(0, 0);
+      loadCampusLifeItems();
     }
 
     // ---------- Log in/out ----------
@@ -592,6 +708,241 @@
       isLoggedIn = false;
       alert('Logged out successfully!');
       updateNav();
+    }
+
+    // ---------- Simulated Resource Names (unchanged) ----------
+    const simulatedResourceNames = {
+      "Academic Facilities": function(major, index) {
+         switch(major) {
+            case "Computer Science":
+              return "CS Innovation Lab " + (index+1);
+            case "Engineering":
+              return "Engineering Design Studio " + (index+1);
+            case "Rotman Commerce":
+              return "Rotman Business Center " + (index+1);
+            case "Arts & Humanities":
+              return "Arts Creative Space " + (index+1);
+            case "Social Sciences":
+              return "Social Research Library " + (index+1);
+            case "Biological Sciences":
+              return "Biological Research Lab " + (index+1);
+            case "Physical Sciences":
+              return "Physics Experiment Center " + (index+1);
+            case "Health Sciences":
+              return "Health Support Clinic " + (index+1);
+            case "Law":
+              return "Law Moot Court " + (index+1);
+            case "Education":
+              return "Teaching Resource Center " + (index+1);
+            case "Architecture Design":
+              return "Architectural Design Studio " + (index+1);
+            case "Music":
+              return "Music Practice Room " + (index+1);
+            case "Information":
+              return "Information Systems Lab " + (index+1);
+            case "Kinesiology & Physical":
+              return "Sports Performance Center " + (index+1);
+            case "International Studies":
+              return "Global Studies Hub " + (index+1);
+            default:
+              return major + " Academic Facility " + (index+1);
+         }
+      },
+      "Research Centers": function(major, index) {
+         switch(major) {
+            case "Computer Science":
+              return "AI Research Center " + (index+1);
+            case "Engineering":
+              return "Engineering Innovation Hub " + (index+1);
+            case "Rotman Commerce":
+              return "Business Research Center " + (index+1);
+            case "Arts & Humanities":
+              return "Cultural Research Institute " + (index+1);
+            case "Social Sciences":
+              return "Social Policy Research Center " + (index+1);
+            case "Biological Sciences":
+              return "Biomedical Research Center " + (index+1);
+            case "Physical Sciences":
+              return "Physical Sciences Lab " + (index+1);
+            case "Health Sciences":
+              return "Health Research Institute " + (index+1);
+            case "Law":
+              return "Legal Studies Research Center " + (index+1);
+            case "Education":
+              return "Educational Research Center " + (index+1);
+            case "Architecture Design":
+              return "Urban Design Research Lab " + (index+1);
+            case "Music":
+              return "Music Technology Research Center " + (index+1);
+            case "Information":
+              return "Data Science Research Hub " + (index+1);
+            case "Kinesiology & Physical":
+              return "Sports Science Research Center " + (index+1);
+            case "International Studies":
+              return "Global Affairs Research Institute " + (index+1);
+            default:
+              return major + " Research Center " + (index+1);
+         }
+      },
+      "Student Clubs": function(major, index) {
+         switch(major) {
+            case "Computer Science":
+              return "Coding Club " + (index+1);
+            case "Engineering":
+              return "Robotics Club " + (index+1);
+            case "Rotman Commerce":
+              return "Entrepreneurship Club " + (index+1);
+            case "Arts & Humanities":
+              return "Literature & Arts Club " + (index+1);
+            case "Social Sciences":
+              return "Debate & Discussion Club " + (index+1);
+            case "Biological Sciences":
+              return "Biology Enthusiasts Club " + (index+1);
+            case "Physical Sciences":
+              return "Chemistry Club " + (index+1);
+            case "Health Sciences":
+              return "Health and Wellness Club " + (index+1);
+            case "Law":
+              return "Law Society " + (index+1);
+            case "Education":
+              return "Teaching Fellows Club " + (index+1);
+            case "Architecture Design":
+              return "Design & Architecture Club " + (index+1);
+            case "Music":
+              return "Music Ensemble " + (index+1);
+            case "Information":
+              return "Tech Innovators Club " + (index+1);
+            case "Kinesiology & Physical":
+              return "Sports & Fitness Club " + (index+1);
+            case "International Studies":
+              return "Global Exchange Club " + (index+1);
+            default:
+              return major + " Student Club " + (index+1);
+         }
+      },
+      "Career & Networking": function(major, index) {
+         switch(major) {
+            case "Computer Science":
+              return "Tech Career Center " + (index+1);
+            case "Engineering":
+              return "Engineering Career Hub " + (index+1);
+            case "Rotman Commerce":
+              return "Business Networking Center " + (index+1);
+            case "Arts & Humanities":
+              return "Creative Industry Network " + (index+1);
+            case "Social Sciences":
+              return "Public Policy Networking " + (index+1);
+            case "Biological Sciences":
+              return "Life Sciences Career Center " + (index+1);
+            case "Physical Sciences":
+              return "Physical Sciences Career Hub " + (index+1);
+            case "Health Sciences":
+              return "Healthcare Career Center " + (index+1);
+            case "Law":
+              return "Legal Career Center " + (index+1);
+            case "Education":
+              return "Educational Career Hub " + (index+1);
+            case "Architecture Design":
+              return "Design & Architecture Career Center " + (index+1);
+            case "Music":
+              return "Music Industry Network " + (index+1);
+            case "Information":
+              return "Information Systems Career Center " + (index+1);
+            case "Kinesiology & Physical":
+              return "Sports Career & Networking " + (index+1);
+            case "International Studies":
+              return "Global Careers Hub " + (index+1);
+            default:
+              return major + " Career Center " + (index+1);
+         }
+      },
+      "Social & Cultural": function(major, index) {
+         switch(major) {
+            case "Computer Science":
+              return "Digital Culture Hub " + (index+1);
+            case "Engineering":
+              return "Engineering Social Club " + (index+1);
+            case "Rotman Commerce":
+              return "Business Culture Lounge " + (index+1);
+            case "Arts & Humanities":
+              return "Artistic Expression Center " + (index+1);
+            case "Social Sciences":
+              return "Community Engagement Hub " + (index+1);
+            case "Biological Sciences":
+              return "Science & Society Forum " + (index+1);
+            case "Physical Sciences":
+              return "Physical Arts & Culture " + (index+1);
+            case "Health Sciences":
+              return "Wellness & Culture Center " + (index+1);
+            case "Law":
+              return "Legal Culture Society " + (index+1);
+            case "Education":
+              return "Cultural Learning Center " + (index+1);
+            case "Architecture Design":
+              return "Architectural Culture Space " + (index+1);
+            case "Music":
+              return "Music and Arts Center " + (index+1);
+            case "Information":
+              return "Digital Media Culture Hub " + (index+1);
+            case "Kinesiology & Physical":
+              return "Sports Culture Center " + (index+1);
+            case "International Studies":
+              return "Global Cultural Exchange " + (index+1);
+            default:
+              return major + " Cultural Center " + (index+1);
+         }
+      },
+      "Advising & Support": function(major, index) {
+         switch(major) {
+            case "Computer Science":
+              return "CS Academic Advising " + (index+1);
+            case "Engineering":
+              return "Engineering Support Center " + (index+1);
+            case "Rotman Commerce":
+              return "Business Advising Office " + (index+1);
+            case "Arts & Humanities":
+              return "Arts & Humanities Advising " + (index+1);
+            case "Social Sciences":
+              return "Social Sciences Support " + (index+1);
+            case "Biological Sciences":
+              return "Biological Sciences Advising " + (index+1);
+            case "Physical Sciences":
+              return "Physical Sciences Support " + (index+1);
+            case "Health Sciences":
+              return "Health Advising Center " + (index+1);
+            case "Law":
+              return "Law Academic Support " + (index+1);
+            case "Education":
+              return "Educational Advising Center " + (index+1);
+            case "Architecture Design":
+              return "Design Advising Office " + (index+1);
+            case "Music":
+              return "Music Support Services " + (index+1);
+            case "Information":
+              return "Information Advising Center " + (index+1);
+            case "Kinesiology & Physical":
+              return "Kinesiology Support Office " + (index+1);
+            case "International Studies":
+              return "International Studies Advising " + (index+1);
+            default:
+              return major + " Advising " + (index+1);
+         }
+      },
+    };
+
+    // ---------- Enhance resources with realistic names (shortened description) ----------
+    function enhanceResources(groupedResources, major) {
+      for (let category in groupedResources) {
+        groupedResources[category] = groupedResources[category].map((res, index) => {
+           if (simulatedResourceNames[category]) {
+             res.name = simulatedResourceNames[category](major, index);
+             // Shortened description text
+             res.description = `${res.name} for ${major} students.`;
+           }
+           return res;
+        });
+      }
+      return groupedResources;
     }
 
     // ---------- Different resources ----------
@@ -641,7 +992,7 @@
       }, 100);
     }
 
-    // ---------- Campus Boundary changed to -79.390） ----------
+    // ---------- Campus Boundary changed to -79.390 ----------
     function initMap() {
       if (map) {
         map.remove();
@@ -683,7 +1034,8 @@
 
     // ---------- Load resources ----------
     function loadMajorResources(major) {
-      const groupedResources = generateResourcesForMajor(major);
+      let groupedResources = generateResourcesForMajor(major);
+      groupedResources = enhanceResources(groupedResources, major);
       const categoryList = document.getElementById('categoryList');
       categoryList.innerHTML = '';
       for (const [category, resources] of Object.entries(groupedResources)) {
@@ -722,7 +1074,7 @@
       }
     }
 
-    // ---------- Info pop-up ----------
+    // ---------- Info pop-up (Resource Modal) ----------
     function openResourceModal(resource) {
       modalContent.innerHTML = `
         <h2 class="text-xl font-bold text-gray-900">${resource.name}</h2>
@@ -759,6 +1111,12 @@
             </ul>
           </div>
         </div>
+        <div class="mt-4">
+          <!-- Provider Details button now in blue (primary) -->
+          <button onclick="openProviderModal(${JSON.stringify(resource).replace(/"/g, '&quot;')})" class="w-full px-4 py-2 bg-primary text-white rounded-button hover:bg-primary/90">
+            Provider Details
+          </button>
+        </div>
         <div class="mt-6 flex space-x-4">
           <button onclick="reserveResource(${JSON.stringify(resource).replace(/"/g, '&quot;')})" class="flex-1 px-4 py-2 bg-primary text-white rounded-button hover:bg-primary/90">
             Reservation
@@ -774,9 +1132,74 @@
       resourceModal.classList.add('hidden');
     }
 
-    // ---------- Numbers ----------
+    // ---------- Provider Details Modal Functions ----------
+    const providerDetails = {
+      "Academic Facilities": {
+          title: "Academic Facilities Provider Details",
+          introduction: "This facility offers state-of-the-art laboratories, study spaces, and equipment. It supports the academic needs of students in ",
+          contact: "facilities@utoronto.ca",
+          upcomingEvents: "Open lab sessions every Tuesday and Thursday.",
+      },
+      "Research Centers": {
+          title: "Research Center Provider Details",
+          introduction: "The research center is a hub for innovative projects and interdisciplinary research. It provides funding, mentorship, and resources for ",
+          contact: "research@utoronto.ca",
+          upcomingEvents: "Research symposium coming up next month.",
+      },
+      "Student Clubs": {
+          title: "Student Club Provider Details",
+          introduction: "This student club fosters community and peer learning through social events, workshops, and networking opportunities for ",
+          contact: "clubs@utoronto.ca",
+          upcomingEvents: "Weekly meet-ups every Friday with special guest speakers.",
+      },
+      "Career & Networking": {
+          title: "Career & Networking Hub Provider Details",
+          introduction: "This hub connects students with industry professionals and organizes career fairs and workshops. It is dedicated to serving ",
+          contact: "career@utoronto.ca",
+          upcomingEvents: "Upcoming career fair and networking events scheduled for next month.",
+      },
+      "Social & Cultural": {
+          title: "Social & Cultural Center Provider Details",
+          introduction: "This center promotes cultural diversity and social engagement with events that celebrate arts, music, and multiculturalism for ",
+          contact: "social@utoronto.ca",
+          upcomingEvents: "Annual cultural festival scheduled for the upcoming semester.",
+      },
+      "Advising & Support": {
+          title: "Advising & Support Center Provider Details",
+          introduction: "This center offers academic advising, mental health support, and peer mentoring services tailored for students in ",
+          contact: "support@utoronto.ca",
+          upcomingEvents: "Open advising sessions available throughout the week.",
+      },
+    };
+
+    function openProviderModal(resource) {
+      const providerModalContent = document.getElementById('providerModalContent');
+      let details = providerDetails[resource.category];
+      if (!details) {
+        details = { title: "Provider Details", introduction: "Detailed information not available.", contact: "N/A", upcomingEvents: "N/A" };
+      }
+      providerModalContent.innerHTML = `
+        <h2 class="text-xl font-bold text-gray-900">${details.title}</h2>
+        <p class="text-sm text-gray-600">${details.introduction}${currentMajor}.</p>
+        <div class="mt-2 text-sm text-gray-600">
+          <b>Contact:</b> ${details.contact}<br/>
+          <b>Upcoming Events:</b> ${details.upcomingEvents}
+        </div>
+        <div class="mt-6 flex justify-end">
+          <button onclick="closeProviderModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-button hover:bg-gray-300">
+            Close
+          </button>
+        </div>
+      `;
+      providerModal.classList.remove('hidden');
+    }
+    function closeProviderModal() {
+      providerModal.classList.add('hidden');
+    }
+
+    // ---------- Reservation functions ----------
     function reserveResource(resource) {
-      // Put contact save into myReservations
+      // Save reservation into myReservations
       myReservations.push({
         name: resource.name,
         description: resource.description,
@@ -815,7 +1238,7 @@
                   <h3 class="font-medium text-gray-900">${res.name}</h3>
                   <p class="text-sm text-gray-600 mt-1">${res.description}</p>
                 </div>
-                <!-- 用更好看的绿Pill -->
+                <!-- Reserved pill -->
                 <span class="inline-block px-3 py-3 text-sm font-semibold text-green-700 bg-green-100 border border-green-250 rounded-full">
                   Reserved
                 </span>
@@ -826,7 +1249,6 @@
                 <span><i class="ri-bookmark-line mr-1"></i>${res.major}</span>
               </div>
               <div class="mt-4 flex space-x-4">
-                <!-- Modify 改为 Contact -->
                 <button onclick="contactReservation(${index})" class="text-sm text-primary hover:text-primary/90">
                   Contact
                 </button>
@@ -842,7 +1264,65 @@
       document.getElementById('statUpcoming').textContent = myReservations.length;
     }
 
-    // Contact -> Pop-up
+    // ---------- New: Update Campus Life Submissions in "My Reservations" page ----------
+    function updateCampusLifeSubmissionList() {
+      const container = document.getElementById('campusLifeSubmissionList');
+      container.innerHTML = '';
+      if (myCampusLifeApplications.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-6">
+            <p class="text-sm text-gray-500">No campus life applications yet.</p>
+          </div>
+        `;
+      } else {
+        myCampusLifeApplications.forEach((app, idx) => {
+          const div = document.createElement('div');
+          div.className = 'flex items-start p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors';
+          div.innerHTML = `
+            <div class="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center">
+              <i class="ri-star-line text-2xl text-primary"></i>
+            </div>
+            <div class="ml-4 flex-1">
+              <div class="flex justify-between">
+                <div>
+                  <h3 class="font-medium text-gray-900">${app.title}</h3>
+                  <p class="text-sm text-gray-600 mt-1">${app.description}</p>
+                </div>
+                <!-- Reserved pill added here -->
+                <span class="inline-block px-3 py-3 text-sm font-semibold text-green-700 bg-green-100 border border-green-250 rounded-full">
+                  Reserved
+                </span>
+              </div>
+              <div class="mt-3 flex items-center space-x-4 text-sm text-gray-600">
+                <span><i class="ri-calendar-line mr-1"></i>${app.dateApplied}</span>
+              </div>
+              <div class="mt-4 flex space-x-4">
+                <button onclick="contactCampusLifeApplication(${idx})" class="text-sm text-primary hover:text-primary/90">
+                  Contact
+                </button>
+                <button onclick="cancelCampusLifeApplication(${idx})" class="text-sm text-red-600 hover:text-red-700">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      }
+    }
+
+    function contactCampusLifeApplication(index) {
+      const app = myCampusLifeApplications[index];
+      alert(`Contact for "${app.title}": campuslife@utoronto.ca`);
+    }
+    function cancelCampusLifeApplication(index) {
+      if (confirm('Are you sure to cancel this application?')) {
+        myCampusLifeApplications.splice(index, 1);
+        updateCampusLifeSubmissionList();
+      }
+    }
+
+    // ---------- Contact -> Pop-up ----------
     function contactReservation(index) {
       const res = myReservations[index];
       modalContent.innerHTML = `
@@ -869,7 +1349,7 @@
       alert('New reservation form (demo).');
     }
 
-    // ---------- Recommended-info + Some of AI generated images (not for commercialization) ----------
+    // ---------- Recommended-info + Some AI generated images (demo) ----------
     const recommendedForInfo = [
       {
         name: 'Information Systems Lab',
@@ -911,6 +1391,318 @@
     }
     reservationsPage.addEventListener('click', loadRecommendedResources);
     document.querySelector('[onclick="navigateToPage(\'reservations\')"]').addEventListener('click', loadRecommendedResources);
+
+    // ---------- Campus Life Page Functionality ----------
+
+    // Sample simulated campus life items
+    const campusLifeItems = [
+      {
+        title: "UofT Clubs Directory",
+        category: "Clubs & Activities",
+        description: "Browse all clubs on campus, their meeting spots, and activities.",
+        location: "Student Centre, Room 101",
+        calendar: "Every Monday at 5 PM",
+        contact: "clubs@utoronto.ca"
+      },
+      {
+        title: "Annual Club Fair",
+        category: "Calendar of Events",
+        description: "Join the club fair to meet representatives and learn about various groups.",
+        location: "Main Campus Courtyard",
+        calendar: "October 15, 2025, 10 AM - 4 PM",
+        contact: "events@utoronto.ca"
+      },
+      {
+        title: "Campus Navigation",
+        category: "Campus Navigation",
+        description: "Interactive campus map to help you find buildings, clubs, and services.",
+        location: "Online Interactive Map",
+        calendar: "N/A",
+        contact: "info@utoronto.ca"
+      },
+      {
+        title: "Meet & Greet Sessions",
+        category: "How to Meet People",
+        description: "Social sessions for students with similar interests.",
+        location: "Student Lounge, Building A",
+        calendar: "Fridays at 6 PM",
+        contact: "social@utoronto.ca"
+      },
+      {
+        title: "Accessibility & Support",
+        category: "Accessibility & Support",
+        description: "Information on accessible facilities and support services.",
+        location: "Accessibility Office, Room 205",
+        calendar: "Mon-Fri, 9 AM - 5 PM",
+        contact: "access@utoronto.ca"
+      },
+      {
+        title: "Cultural Events",
+        category: "Culture",
+        description: "Art exhibits, performances, and cultural festivals across campus.",
+        location: "Various Locations",
+        calendar: "See full calendar online",
+        contact: "culture@utoronto.ca"
+      },
+      {
+        title: "Health & Wellness Programs",
+        category: "Health & Wellness",
+        description: "Workshops, fitness classes, and mental health resources for students.",
+        location: "Health Centre, Room 10",
+        calendar: "Weekly sessions",
+        contact: "health@utoronto.ca"
+      },
+      {
+        title: "Internship & Work Opportunities",
+        category: "Work Opportunities",
+        description: "Discover internships, part-time jobs, and career networking events.",
+        location: "Career Centre, Building C",
+        calendar: "Monthly updates",
+        contact: "career@utoronto.ca"
+      }
+    ];
+
+    // New: Simulated events for each Campus Life category (at least 5 per category)
+    const campusLifeEvents = {
+      "Clubs & Activities": [
+        { title: "Robotics Workshop", description: "Learn to build robots with peers.", location: "Engineering Building 2", eventTime: "Tuesday, 4 PM" },
+        { title: "Art Club Meetup", description: "Discuss and create art together.", location: "Art Studio, Room 5", eventTime: "Wednesday, 3 PM" },
+        { title: "Coding Bootcamp", description: "Intensive coding sessions for beginners.", location: "Computer Lab", eventTime: "Saturday, 10 AM" },
+        { title: "Debate Tournament", description: "Friendly debate competition.", location: "Social Sciences Hall", eventTime: "Friday, 6 PM" },
+        { title: "Photography Walk", description: "Capture campus life through your lens.", location: "Campus Grounds", eventTime: "Sunday, 2 PM" }
+      ],
+      "Calendar of Events": [
+        { title: "Club Fair 2025", description: "Explore various student clubs.", location: "Main Campus Courtyard", eventTime: "October 15, 2025, 10 AM - 4 PM" },
+        { title: "Tech Expo", description: "Showcase of latest technological innovations.", location: "Tech Hub", eventTime: "November 20, 2025" },
+        { title: "Cultural Night", description: "Celebrate diverse cultures with music and food.", location: "Cultural Centre", eventTime: "December 5, 2025" },
+        { title: "Career Summit", description: "Network with industry professionals.", location: "Conference Hall", eventTime: "January 15, 2026" },
+        { title: "Health & Wellness Fair", description: "Discover health resources and tips.", location: "Health Sciences Building", eventTime: "September 10, 2025" }
+      ],
+      "Campus Navigation": [
+        { title: "Campus Tour", description: "Guided tour of campus landmarks.", location: "Main Entrance", eventTime: "Every Monday, 10 AM" },
+        { title: "New Building Tour", description: "Discover the latest campus facilities.", location: "New Wing", eventTime: "Friday, 3 PM" },
+        { title: "Map Training Session", description: "Learn to navigate the interactive map.", location: "Tech Lab", eventTime: "Wednesday, 2 PM" },
+        { title: "Accessibility Walk", description: "Explore the best accessible routes.", location: "Various", eventTime: "Saturday, 11 AM" },
+        { title: "Night Navigation Tour", description: "Experience campus at night.", location: "Campus Grounds", eventTime: "Friday, 8 PM" }
+      ],
+      "How to Meet People": [
+        { title: "Speed Friending", description: "Quick rounds of introductions.", location: "Student Lounge", eventTime: "1st Friday, 7 PM" },
+        { title: "Interest Meetup", description: "Meet peers who share your hobbies.", location: "Club Rooms", eventTime: "Thursday, 6 PM" },
+        { title: "Networking Mixer", description: "Casual networking event.", location: "Campus Bar", eventTime: "Saturday, 9 PM" },
+        { title: "Group Study Session", description: "Collaborative study to build connections.", location: "Library Study Rooms", eventTime: "Weekly" },
+        { title: "Community Service Day", description: "Volunteer and meet like-minded people.", location: "Local Community Center", eventTime: "Annually" }
+      ],
+      "Accessibility & Support": [
+        { title: "Accessibility Workshop", description: "Learn about campus accessibility.", location: "Support Centre", eventTime: "October 10, 2025" },
+        { title: "Mental Health Seminar", description: "Stress management and counseling info.", location: "Health Centre", eventTime: "November 5, 2025" },
+        { title: "Tutoring Session", description: "Extra academic tutoring available.", location: "Advising Office", eventTime: "Mon-Fri, 9 AM - 5 PM" },
+        { title: "Feedback Forum", description: "Share your accessibility experience.", location: "Student Centre", eventTime: "2nd Thursday, 4 PM" },
+        { title: "Peer Support Group", description: "Group discussions on shared challenges.", location: "Community Room", eventTime: "Weekly" }
+      ],
+      "Culture": [
+        { title: "International Food Festival", description: "Taste dishes from around the world.", location: "Main Campus Courtyard", eventTime: "September 25, 2025" },
+        { title: "Art Exhibition", description: "Display of student art and photography.", location: "Gallery", eventTime: "October 1-31, 2025" },
+        { title: "Live Concert", description: "Campus band performance.", location: "Student Centre Auditorium", eventTime: "December 5, 2025" },
+        { title: "Dance Workshop", description: "Learn traditional dances.", location: "Dance Studio", eventTime: "Every Saturday" },
+        { title: "Theatre Performance", description: "Drama club presents a play.", location: "Campus Theatre", eventTime: "November 20, 2025" }
+      ],
+      "Health & Wellness": [
+        { title: "Yoga Class", description: "Relax with weekly yoga sessions.", location: "Health Centre", eventTime: "Mondays, 7 AM" },
+        { title: "Meditation Session", description: "Guided meditation for stress relief.", location: "Quiet Zone", eventTime: "Daily, 8 AM" },
+        { title: "Nutrition Seminar", description: "Learn healthy eating habits.", location: "Lecture Hall", eventTime: "October 20, 2025" },
+        { title: "Fitness Bootcamp", description: "Intense group workout.", location: "Campus Gym", eventTime: "Tuesdays, 6 PM" },
+        { title: "Mental Health Workshop", description: "Coping strategies and support.", location: "Counseling Room", eventTime: "Fridays, 3 PM" }
+      ],
+      "Work Opportunities": [
+        { title: "Software Engineering Internship", description: "6-month internship opportunity.", location: "Tech Company HQ", eventTime: "Apply by December 1, 2025" },
+        { title: "Business Analyst Position", description: "Entry-level job opportunity.", location: "Rotman Commerce Office", eventTime: "Apply by November 15, 2025" },
+        { title: "Design Intern", description: "Internship in creative design.", location: "Design Studio", eventTime: "Apply by October 30, 2025" },
+        { title: "Marketing Coordinator", description: "Part-time job opportunity.", location: "Campus Marketing Office", eventTime: "Apply by January 10, 2026" },
+        { title: "Club Fair Volunteer", description: "Volunteer to support the annual club fair.", location: "Student Centre", eventTime: "Event on October 15, 2025" }
+      ]
+    };
+
+    function loadCampusLifeItems() {
+      const listContainer = document.getElementById('campusLifeList');
+      const searchInput = document.getElementById('campusLifeSearch');
+      listContainer.innerHTML = '';
+
+      // Filter items based on search query
+      const query = searchInput.value.toLowerCase();
+      const filteredItems = campusLifeItems.filter(item => 
+        item.title.toLowerCase().includes(query) || 
+        item.category.toLowerCase().includes(query) ||
+        item.description.toLowerCase().includes(query)
+      );
+
+      // Create a card for each item
+      filteredItems.forEach((item) => {
+        const card = document.createElement('div');
+        card.className = "p-6 bg-gray-50 rounded-xl shadow hover:bg-gray-100 cursor-pointer transition-colors";
+        card.innerHTML = `
+          <h3 class="text-xl font-bold text-gray-900 mb-2">${item.title}</h3>
+          <p class="text-sm text-gray-600 mb-2">${item.description}</p>
+          <p class="text-xs text-gray-500">Category: ${item.category}</p>
+        `;
+        card.addEventListener('click', () => {
+          openCampusLifeModal(item);
+        });
+        listContainer.appendChild(card);
+      });
+    }
+
+    function openCampusLifeModal(item) {
+      campusLifeModalContent.innerHTML = `
+        <h2 class="text-xl font-bold text-gray-900">${item.title}</h2>
+        <p class="text-sm text-gray-600"><strong>Category:</strong> ${item.category}</p>
+        <p class="text-sm text-gray-600"><strong>Description:</strong> ${item.description}</p>
+        <p class="text-sm text-gray-600"><strong>Location:</strong> ${item.location}</p>
+        <p class="text-sm text-gray-600"><strong>Calendar:</strong> ${item.calendar}</p>
+        <p class="text-sm text-gray-600"><strong>Contact:</strong> ${item.contact}</p>
+      `;
+      campusLifeModal.classList.remove('hidden');
+    }
+    function closeCampusLifeModal() {
+      campusLifeModal.classList.add('hidden');
+    }
+
+    function openCampusLifeEventsModal(category) {
+      campusLifeEventsModalContent.innerHTML = ''; // clear
+      const events = campusLifeEvents[category] || [];
+      // Title row
+      const heading = document.createElement('h2');
+      heading.className = "text-xl font-bold text-gray-900 mb-4 col-span-3";
+      heading.textContent = `${category} Events`;
+      campusLifeEventsModalContent.appendChild(heading);
+
+      events.forEach(eventItem => {
+        const div = document.createElement('div');
+        div.className = "p-4 bg-gray-50 rounded-xl shadow mb-4 flex flex-col";
+        div.innerHTML = `
+          <h3 class="font-bold text-gray-900">${eventItem.title}</h3>
+          <p class="text-sm text-gray-600 mt-1 flex-grow">${eventItem.description}</p>
+          <p class="text-xs text-gray-500 mt-2"><strong>Location:</strong> ${eventItem.location}</p>
+          <p class="text-xs text-gray-500"><strong>When:</strong> ${eventItem.eventTime}</p>
+          <!-- Changed button to use primary color -->
+          <button class="mt-3 px-4 py-2 bg-primary text-white rounded-button hover:bg-primary/90 w-full"
+            onclick='openCampusLifeEventDetailModal(${JSON.stringify(eventItem).replace(/"/g, "&quot;")})'>
+            View Details
+          </button>
+        `;
+        campusLifeEventsModalContent.appendChild(div);
+      });
+
+      // "Back" button in full row
+      const backDiv = document.createElement('div');
+      backDiv.className = "col-span-3 flex justify-end mt-4";
+      backDiv.innerHTML = `
+        <button onclick="closeCampusLifeEventsModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-button hover:bg-gray-300">
+          Back
+        </button>
+      `;
+      campusLifeEventsModalContent.appendChild(backDiv);
+
+      campusLifeEventsModal.classList.remove('hidden');
+    }
+    function closeCampusLifeEventsModal() {
+      campusLifeEventsModal.classList.add('hidden');
+    }
+
+    function openCampusLifeEventDetailModal(eventItem) {
+      let html = `<h2 class="text-xl font-bold text-gray-900 mb-4">${eventItem.title}</h2>`;
+      html += `<p class="text-sm text-gray-600"><strong>Description:</strong> ${eventItem.description}</p>`;
+      html += `<p class="text-sm text-gray-600"><strong>Location:</strong> ${eventItem.location}</p>`;
+      html += `<p class="text-sm text-gray-600"><strong>When:</strong> ${eventItem.eventTime}</p>`;
+      html += `<div class="mt-6 flex space-x-4">
+                 <button onclick="submitCampusLifeApplication('${eventItem.title}','${eventItem.description}')" class="flex-1 px-4 py-2 bg-primary text-white rounded-button hover:bg-primary/90">
+                   Submit Application
+                 </button>
+                 <button onclick="closeCampusLifeEventDetailModal()" class="flex-1 px-4 py-2 border border-gray-200 rounded-button hover:bg-gray-50">
+                   Cancel
+                 </button>
+               </div>`;
+      campusLifeEventDetailModalContent.innerHTML = html;
+      campusLifeEventDetailModal.classList.remove('hidden');
+    }
+    function closeCampusLifeEventDetailModal() {
+      campusLifeEventDetailModal.classList.add('hidden');
+    }
+
+    // ---------- Insert the event into myCampusLifeApplications and show in "My Reservations" page ----------
+    function submitCampusLifeApplication(title, description) {
+      alert(`Application submitted for "${title}"`);
+      // Add to the array, also include a default contact value
+      myCampusLifeApplications.push({
+        title: title,
+        description: description,
+        dateApplied: new Date().toLocaleDateString(),
+        contact: "campuslife@utoronto.ca"
+      });
+      closeCampusLifeEventDetailModal();
+    }
+
+    // ---------- MutationObserver to remove the "Close" button in the Campus Life Modal ----------
+    const removeCloseButtonObserver = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        mutation.addedNodes.forEach(node => {
+          if (node.nodeType === Node.ELEMENT_NODE && node.id === "campusLifeModalContent") {
+            const closeBtn = campusLifeModal.querySelector('button[onclick="closeCampusLifeModal()"]');
+            if (closeBtn) {
+              closeBtn.remove();
+            }
+          }
+        });
+      });
+    });
+    if (campusLifeModal) {
+      removeCloseButtonObserver.observe(campusLifeModal, { childList: true, subtree: true });
+    }
+
+    // ---------- MutationObserver to append "View Events List" button in Campus Life Modal ----------
+    const campusLifeModalObserver = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        mutation.addedNodes.forEach(node => {
+          if (node.nodeType === Node.ELEMENT_NODE && campusLifeModalContent && !campusLifeModalContent.querySelector('.view-events-btn')) {
+            const btn = document.createElement('button');
+            btn.className = "view-events-btn mt-4 px-4 py-2 bg-primary text-white rounded-button hover:bg-primary/90 w-full";
+            btn.innerText = "View Events List";
+            btn.addEventListener('click', () => {
+              const catPara = campusLifeModalContent.querySelector('p.text-sm');
+              if (catPara && catPara.innerText.includes("Category:")) {
+                const category = catPara.innerText.split("Category:")[1].trim();
+                openCampusLifeEventsModal(category);
+              } else {
+                alert("Category information not found!");
+              }
+            });
+            campusLifeModalContent.appendChild(btn);
+          }
+        });
+      });
+    });
+    if(campusLifeModalContent){
+      campusLifeModalObserver.observe(campusLifeModalContent, { childList: true });
+    }
+
+    // ---------- MutationObserver to shorten map resource descriptions ----------
+    const categoryList = document.getElementById('categoryList');
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        mutation.addedNodes.forEach(node => {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            const paragraphs = node.querySelectorAll('p.text-sm');
+            paragraphs.forEach(p => {
+              if (p.innerText.length > 40) {
+                p.innerText = p.innerText.slice(0, 40) + '...';
+              }
+            });
+          }
+        });
+      });
+    });
+    if (categoryList) {
+      observer.observe(categoryList, { childList: true, subtree: true });
+    }
   </script>
 </body>
 </html>
