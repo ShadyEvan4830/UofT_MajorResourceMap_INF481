@@ -1780,5 +1780,91 @@
     });
   }
 </script>
+
+<!-- Calendar View Page -->
+<div id="calendarViewPage" class="hidden min-h-screen bg-white">
+  <div class="max-w-7xl mx-auto p-6">
+    <h1 class="text-4xl font-bold text-primary mb-4">Calendar View</h1>
+    <p class="text-lg text-gray-600">
+      You can view all your upcoming appointments here, the calendar is constantly improving...
+    </p>
+    <!-- Check -->
+    <div class="mt-6">
+      <button onclick="returnToReservations()" class="px-4 py-2 bg-primary text-white rounded-button hover:bg-primary/90">
+        Return to "My Reservation"
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- New Reservation Page -->
+<div id="newReservationPage" class="hidden min-h-screen bg-white">
+  <div class="max-w-7xl mx-auto p-6">
+    <h1 class="text-4xl font-bold text-primary mb-4">New Reservation</h1>
+    <p class="text-lg text-gray-600">
+      Please fill out the form below to create a new appointment:
+    </p>
+    <form id="newReservationForm" class="space-y-4 mt-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Resource Name</label>
+        <input type="text" class="w-full px-4 py-2 border border-gray-200 rounded-button" placeholder="请输入资源名称" required>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Appointment Date</label>
+        <input type="date" class="w-full px-4 py-2 border border-gray-200 rounded-button" required>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Time</label>
+        <input type="time" class="w-full px-4 py-2 border border-gray-200 rounded-button" required>
+      </div>
+      <button type="submit" class="px-4 py-2 bg-primary text-white rounded-button hover:bg-primary/90">
+        提交预约
+      </button>
+    </form>
+    <div class="mt-6">
+      <button onclick="returnToReservations()" class="px-4 py-2 bg-primary text-white rounded-button hover:bg-primary/90">
+        返回“我的预约”
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Switch Page -->
+<script>
+  // Cover Demon Info
+  function showCalendarView() {
+    // Hide Info
+    reservationsPage.classList.add('hidden');
+    document.getElementById('calendarViewPage').classList.remove('hidden');
+    window.scrollTo(0, 0);
+  }
+
+  function makeNewReservation() {
+    // Hide Info
+    reservationsPage.classList.add('hidden');
+    document.getElementById('newReservationPage').classList.remove('hidden');
+    window.scrollTo(0, 0);
+  }
+
+  // Hide Info
+  function returnToReservations() {
+    document.getElementById('calendarViewPage').classList.add('hidden');
+    document.getElementById('newReservationPage').classList.add('hidden');
+    reservationsPage.classList.remove('hidden');
+    window.scrollTo(0, 0);
+  }
+
+  // Submit Document
+  const newReservationForm = document.getElementById('newReservationForm');
+  if (newReservationForm) {
+    newReservationForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      // Check submission
+      alert('预约提交成功！');
+      // XD
+      returnToReservations();
+    });
+  }
+</script>
 </body>
 </html>
