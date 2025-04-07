@@ -1718,7 +1718,7 @@
     function requireLoginWrapper(originalFunction) {
       return function(...args) {
         if (!isLoggedIn) {
-          alert("请先登录以使用此功能。");
+          alert("Please log in to use this feature.");
           showSignInModal();
           return;
         }
