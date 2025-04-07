@@ -64,6 +64,13 @@
       display: none !important;
     }
   </style>
+  <!-- 新增：调整登录页面 Logo 的尺寸 -->
+  <style>
+    /* 使登录页面的 UofT logo 更小，保持设计平衡 */
+    #signInModal img {
+      width: 50px !important;
+    }
+  </style>
 </head>
 
 <body class="bg-gray-50 min-h-screen">
@@ -1704,5 +1711,75 @@
       observer.observe(categoryList, { childList: true, subtree: true });
     }
   </script>
+
+  <!-- ===================== Login and Check ===================== -->
+  <script>
+    // Function
+    function requireLoginWrapper(originalFunction) {
+      return function(...args) {
+        if (!isLoggedIn) {
+          alert("请先登录以使用此功能。");
+          showSignInModal();
+          return;
+        }
+        return originalFunction.apply(this, args);
+      };
+    }
+
+    // Cover all functions
+    navigateToPage = requireLoginWrapper(navigateToPage);
+    returnToHome = requireLoginWrapper(returnToHome);
+    goToCampusLife = requireLoginWrapper(goToCampusLife);
+    goToMap = requireLoginWrapper(goToMap);
+    reserveResource = requireLoginWrapper(reserveResource);
+    openResourceModal = requireLoginWrapper(openResourceModal);
+    openProviderModal = requireLoginWrapper(openProviderModal);
+    makeNewReservation = requireLoginWrapper(makeNewReservation);
+    showCalendarView = requireLoginWrapper(showCalendarView);
+    openCampusLifeModal = requireLoginWrapper(openCampusLifeModal);
+    openCampusLifeEventsModal = requireLoginWrapper(openCampusLifeEventsModal);
+    openCampusLifeEventDetailModal = requireLoginWrapper(openCampusLifeEventDetailModal);
+    submitCampusLifeApplication = requireLoginWrapper(submitCampusLifeApplication);
+    contactReservation = requireLoginWrapper(contactReservation);
+    cancelReservation = requireLoginWrapper(cancelReservation);
+    contactCampusLifeApplication = requireLoginWrapper(contactCampusLifeApplication);
+    cancelCampusLifeApplication = requireLoginWrapper(cancelCampusLifeApplication);
+  </script>
+
+<!-- ===================== Search ===================== -->
+<script>
+  // Search Bar
+  const campusLifeSearchInput = document.getElementById('campusLifeSearch');
+  if (campusLifeSearchInput) {
+    campusLifeSearchInput.addEventListener('input', function() {
+      loadCampusLifeItems();
+    });
+  }
+
+  // Right Search Bar
+  const resourceSearchInput = document.querySelector('input[placeholder="Search resources..."]');
+  if (resourceSearchInput) {
+    resourceSearchInput.addEventListener('input', function() {
+      const query = this.value.toLowerCase();
+      // Check all resources
+      const resourceItems = document.querySelectorAll('#categoryList .resource-item');
+      resourceItems.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(query)) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+      // Hinde block
+      const categoryContainers = document.querySelectorAll('#categoryList .resource-category');
+      categoryContainers.forEach(container => {
+        // Check container
+        const visibleItems = container.querySelectorAll('.resource-item:not([style*="display: none"])');
+        container.style.display = visibleItems.length > 0 ? '' : 'none';
+      });
+    });
+  }
+</script>
 </body>
 </html>
