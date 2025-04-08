@@ -21,9 +21,9 @@ The UTSG Major Resource Map allows students to:
   
 - **Reservation System**  
   
-- **Enhanced Navigation and User Experience**  
+- **Improved Navigation and User Experience**  
   
-- **Responsive Design:**  
+- **Responsive Design**  
 
 ## Technologies Used
 
