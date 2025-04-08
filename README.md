@@ -1,31 +1,29 @@
 # UofT Major Resource Map (INF481 Simulation)
 
-This is an interactive web application that simulates a campus resource map for the University of Toronto's St. George campus. The project allows students to select their major and view a customized map that highlights labs, research centers, student clubs, and more, based on their Primary and Secondary Research. All of which are tailored to their field of study. Please note that this project was developed as part of the INF481 final project by Tianen (Evan) Hao, a simulation for academic purposes and it is not connected to actual University systems.
+This is an interactive web application that simulates a campus resource map for the University of Toronto's St. George campus. The project allows students to select their major and view a customized interactive map that highlights labs, research centres, student clubs, and more based on their major and minor studies. Please note that this project was developed as part of the INF481 final project by Tianen (Evan) Hao, a simulation for academic purposes, and it is not connected to actual University systems.
 
 ## Overview
 
 The UTSG Major Resource Map allows students to:
-- Select one of 15 majors and view a customized interactive map.
-- See simulated resources tailored to their major, including Academic Facilities, Research Centres, Student Clubs, Career & Networking, Social & Cultural, and Advising & Support.
-- Reserve resources and view them in the "My Reservations" section.
-- Simulate a sign-in flow (displaying "Karen" with a dropdown for Settings and Log Out).
+-Choose from 15 majors via a modern, card-based "Select Major" page that has been entirely redesigned for improved user experience.
+-Each major displays simulated resources across six categories: Academic Facilities, Research Centers, Student Clubs, Career & Networking, Social & Cultural, and Advising & Support.
+-Powered by Leaflet.js, the map displays campus boundaries and resource markers at realistic positions within U of T buildings, including an interactive legend.
+-Users can simulate booking resources via a reservation module, review their bookings in a dedicated "My Reservations" page, and view quick statistics.
+-A new Campus Life section aggregates events, clubs, and other extracurricular activities, differentiating between academic and non-academic resources.
+-A functional sign-in modal simulates logging in, showing a user menu ("Karen") with options for Settings and Log Out.
+-Using Tailwind CSS for styling, the design is responsive and features smooth animations and transitions across all pages.
 
 ## Features
 
-- **Interactive Map:**  
-  Powered by Leaflet.js, the map displays campus boundaries (with an adjusted boundary on the right) and resource markers.
+- **Interactive Map & Resource Visualization**  
   
-- **Major-Specific Resources:**  
-  Each major shows 10 simulated resources distributed across six predefined categories with data tailored to each field (e.g., Computer Science, Engineering, etc.).
+- **Unified Digital Platform**  
   
-- **Reservation System:**  
-  Users can simulate reserving resources and see their schedule, along with a "Recommended for Bachelor of Information" section and quick stats.
+- **Reservation System**  
   
-- **User Simulation:**  
-  A basic sign-in mechanism simulates logging in. After signing in, the navigation displays "Karen" with a dropdown menu.
+- **Enhanced Navigation and User Experience**  
   
 - **Responsive Design:**  
-  Built using HTML, Tailwind CSS, and JavaScript to provide a modern and responsive user experience.
 
 ## Technologies Used
 
