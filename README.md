@@ -5,13 +5,13 @@ This is an interactive web application that simulates a campus resource map for 
 ## Overview
 
 The UTSG Major Resource Map allows students to:
--Choose from 15 majors via a modern, card-based "Select Major" page that has been entirely redesigned for improved user experience.
--Each major displays simulated resources across six categories: Academic Facilities, Research Centers, Student Clubs, Career & Networking, Social & Cultural, and Advising & Support.
--Powered by Leaflet.js, the map displays campus boundaries and resource markers at realistic positions within U of T buildings, including an interactive legend.
--Users can simulate booking resources via a reservation module, review their bookings in a dedicated "My Reservations" page, and view quick statistics.
--A new Campus Life section aggregates events, clubs, and other extracurricular activities, differentiating between academic and non-academic resources.
--A functional sign-in modal simulates logging in, showing a user menu ("Karen") with options for Settings and Log Out.
--Using Tailwind CSS for styling, the design is responsive and features smooth animations and transitions across all pages.
+- Choose from 15 majors via a modern, card-based "Select Major" page that has been entirely redesigned for improved user experience.
+- Each major displays simulated resources across six categories: Academic Facilities, Research Centers, Student Clubs, Career & Networking, Social & Cultural, and Advising & Support.
+- Powered by Leaflet.js, the map displays campus boundaries and resource markers at realistic positions within U of T buildings, including an interactive legend.
+- Users can simulate booking resources via a reservation module, review their bookings in a dedicated "My Reservations" page, and view quick statistics.
+- A new Campus Life section aggregates events, clubs, and other extracurricular activities, differentiating between academic and non-academic resources.
+- A functional sign-in modal simulates logging in, showing a user menu ("Karen") with options for Settings and Log Out.
+- Using Tailwind CSS for styling, the design is responsive and features smooth animations and transitions across all pages.
 
 ## Features
 
